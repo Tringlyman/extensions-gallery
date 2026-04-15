@@ -1,0 +1,213 @@
+<script>
+    import {onMount} from 'svelte';
+
+    // Components
+    import BarPage from "./Page.svelte";
+    import BarButton from "./Button.svelte";
+    
+    import stateSearchBar from '$lib/state/searchBar.svelte.js';
+    
+    let props = $props();
+    let displaySearchBar = $derived(props.displaySearchBar);
+
+    const toggleTheme = () => {
+        let isNowDark = false;
+        if (localStorage.getItem("pm:dark") !== "true") {
+            isNowDark = true;
+        }
+        localStorage.setItem("pm:dark", isNowDark);
+        
+        const event = new CustomEvent("penguinmod-dark-updated", { detail: isNowDark });
+        document.dispatchEvent(event);
+    };
+
+    // svelte-ignore non_reactive_update
+    // this is from bind:this, idk why svelte is mad
+    let searchInput = null;
+    const searchExtensions = () => {
+        if (!searchInput) return;
+        const searchTerm = String(searchInput.value)
+            .trim().toLowerCase();
+
+        if (props.onsearch) props.onsearch(searchTerm);
+
+        const event = new CustomEvent("penguinmod-search-bar-input", { detail: searchTerm });
+        document.dispatchEvent(event);
+    };
+    const recommendationClicked = (extension) => {
+        const event = new CustomEvent("penguinmod-recommendation-clicked", { detail: extension.code });
+        document.dispatchEvent(event);
+    };
+    onMount(() => {
+        document.addEventListener("penguinmod-recommendations-updated", () => {
+            if (!searchInput) return;
+            searchInput.focus();
+        });
+
+        if (!searchInput) return;
+        searchInput.placeholder = (window.innerWidth <= 850 ? "Extension search" : "Search for an extension...")
+    });
+</script>
+
+<div class="bar">
+    <a class="logo" href="/">
+        <img class="logo-image" src="/navicon.png" alt="PenguinMod" />
+    </a>
+    <div style="margin-right: 12px;"></div>
+    <BarPage style="padding:0.5rem" onclick={toggleTheme}>
+        <img src="/icons/moon.svg" alt="Theme" />
+    </BarPage>
+    <BarPage link={"/docs"}>Documentation</BarPage>
+
+    {#if displaySearchBar}
+        <div class="search">
+            <button class="search-button" onclick={searchExtensions}>
+                <img
+                    src="/icons/search-icon.svg"
+                    alt="Search"
+                    style="width:30px; height:20px; margin-bottom:5px; margin-top: 5px;"
+                />
+            </button>
+            <input
+                type="text"
+                class="search-bar"
+                placeholder="Search for an extension..."
+                oninput={searchExtensions}
+                bind:this={searchInput}
+            />
+            {#each stateSearchBar.recommendations as searchRecommendation, idx}
+                <button
+                    class="search-recommendation"
+                    style="margin-top: {idx * 3}em;
+                        {idx === 0 ? ' border-top: 0;' : ''}
+                        {idx === (stateSearchBar.recommendations.length - 1) ? ' border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;' : ''}"
+                    onclick={() => recommendationClicked(searchRecommendation)}
+                >
+                    <p>Copy {searchRecommendation.name} to clipboard</p>
+                </button>
+            {/each}
+        </div>
+    {/if}
+</div>
+
+<style>
+    :root {
+        --penguinmod-color: #666;
+    }
+    :global(body.dark-mode) {
+        --penguinmod-color: #aaa;
+    }
+
+    .bar {
+        position: fixed;
+        width: 100%;
+        left: 0px;
+        top: 0px;
+        background: var(--penguinmod-color);
+        height: 3rem;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        box-sizing: border-box;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 0.75rem;
+        font-weight: bold;
+        min-width: 1000px;
+        z-index: 1000;
+    }
+    @media only screen and (min-width: 850px) {
+        .bar {
+            justify-content: center;
+        }
+    }
+
+    .logo {
+        height: 100%;
+    }
+    .logo-image {
+        margin-top: 10%;
+        height: 80%;
+        transition: 0.15s ease all;
+    }
+    .logo-image:hover {
+        margin-top: 5%;
+        height: 90%;
+        transition: 0.15s ease all;
+    }
+
+    .search {
+        position: relative;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        padding: 0px 0.25rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border: 0px;
+        border-radius: 4px;
+        outline: 0px;
+        background-color: #00000026;
+        color: #fff;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    @media only screen and (max-width: 850px) {
+        .search{
+            width:16%;
+        }
+    }
+    .search-button {
+        cursor: pointer;
+        height: 100%;
+        background: transparent;
+        border: 0;
+        padding: 0.2rem;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+    }
+    .search-bar {
+        cursor: text;
+        width: 16rem;
+        height: 30px;
+        background: transparent;
+        border: 0;
+        color: white;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        outline: 0;
+    }
+
+    /* dont use <selector>, because browsers will ignore it if one of the selectors is unknown */
+    ::placeholder {
+        color: white;
+        opacity: 0.75;
+    }
+    :-ms-input-placeholder {
+        color: white;
+        opacity: 0.75;
+    }
+    ::-ms-input-placeholder {
+        color: white;
+        opacity: 0.75;
+    }
+
+    .search-recommendation {
+        position: absolute;
+        left: 0;
+        top: calc(3rem - 0.4rem);
+        width: 100%;
+        padding: 0 8px;
+        background: var(--penguinmod-color);
+        border: 1px solid #00000026;
+        border-radius: 0;
+        color: white;
+        text-align: left;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .search-recommendation:active {
+        filter: brightness(0.8);
+    }
+</style>

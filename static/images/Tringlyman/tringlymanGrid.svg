@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600px" height="300px" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:export>
+      <bx:file format="png" width="600" height="372"/>
+    </bx:export>
+  </defs>
+  <rect width="600" height="300" style="stroke-width: 32px; fill: rgb(255, 106, 31); stroke: rgb(230, 95, 28);"/>
+  <g style="" transform="matrix(1.731768, 0, 0, 1.690738, -219.530356, -103.610706)">
+    <rect x="291.744" y="100.329" width="16.578" height="99.345" style="fill: rgb(255, 255, 255); stroke-width: 1; transform-origin: 300.037px 150.002px;"/>
+    <path d="M 201.848 360.326 H 279.17 A 11.011 11.011 0 0 1 290.181 371.337 V 448.655 A 11.011 11.011 0 0 1 279.17 459.666 H 201.848 A 11.011 11.011 0 0 1 190.837 448.655 V 371.337 A 11.011 11.011 0 0 1 201.848 360.326 Z M 205.837 378.837 V 441.155 A 3.511 3.511 0 0 0 209.348 444.666 H 271.67 A 3.511 3.511 0 0 0 275.181 441.155 V 378.837 A 3.511 3.511 0 0 0 271.67 375.326 H 209.348 A 3.511 3.511 0 0 0 205.837 378.837 Z" bx:shape="frame 190.837 360.326 99.344 99.34 15 15 11.011 11.011 11.011 11.011 1@0e0390d8" style="fill: rgb(255, 255, 255); transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(1, -0.000079, 0.000079, 1, 59.491025, -259.996074)"/>
+    <rect y="141.075" width="99.345" height="16.578" style="fill: rgb(255, 255, 255);" x="250.324"/>
+  </g>
+</svg>

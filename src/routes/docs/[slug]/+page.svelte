@@ -1,0 +1,91 @@
+<script>
+    import { onMount, tick } from "svelte";
+    import MarkdownIt from "markdown-it";
+
+    import DocumentationPages from "$lib/Documentation/pages";
+    import scratchblocks from "$lib/scratchblocks.js";
+    
+    let { data } = $props();
+    const markdownSource = DocumentationPages[data.slug];
+    // console.log(markdownSource);
+
+    const md = new MarkdownIt({
+        html: true,
+        linkify: true,
+        breaks: true,
+    });
+
+    md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+        const token = tokens[idx];
+
+        if (token.info === "scratch") {
+            env.usesScratchBlocks = true;
+            return `<div class="render-scratchblocks">${md.utils.escapeHtml(
+                token.content
+            )}</div>`;
+        }
+
+        // By default markdown-it will use a strange combination of <code> and <pre>; we'd rather it
+        // just use <pre>
+        return `<pre class="language-${md.utils.escapeHtml(
+            token.info
+        )}">${md.utils.escapeHtml(token.content)}</pre>`;
+    };
+
+    const env = {};
+    const tokens = md.parse(markdownSource, env);
+
+    // Extract the header
+    let headerHTML = $state("## file did not contain header ##");
+    let headerText = $derived(headerHTML);
+    const headerStart = tokens.findIndex(
+        (token) => token.type === "heading_open" && token.tag === "h1"
+    );
+    const headerEnd = tokens.findIndex(
+        (token) => token.type === "heading_close" && token.tag === "h1"
+    );
+    if (headerStart !== -1 && headerEnd !== -1) {
+        const headerTokens = tokens.splice(
+            headerStart,
+            headerEnd - headerStart + 1
+        );
+
+        // Discard the header tokens themselves, but render the HTML title with any formatting
+        headerTokens.shift();
+        headerTokens.pop();
+        headerHTML = md.renderer.render(headerTokens, md.options, env);
+
+        // We also need a no-formatting version for the title
+        const justTextTokens = headerTokens.filter(
+            (token) => token.type === "inline"
+        );
+        headerText = md.renderer.render(justTextTokens, md.options, env);
+    }
+
+    // reorder here was trying to fix a bug caused by a different bug, but this is fine
+    const bodyHTML = md.renderer.render(tokens, md.options, env);
+    const renderScratchBlocks = () => {
+        if (bodyHTML && env.usesScratchBlocks) {
+            scratchblocks.module.renderMatching(".render-scratchblocks", {
+                style: "scratch3",
+            });
+        }
+    };
+    onMount(() => {
+        scratchblocks.init();
+        renderScratchBlocks();
+    });
+</script>
+
+<div class="container">
+    <h1>{@html headerHTML}</h1>
+
+    {@html bodyHTML}
+</div>
+
+<style>
+    .container {
+        margin: 0 20%;
+        width: 60%;
+    }
+</style>
