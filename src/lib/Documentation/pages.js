@@ -1,5 +1,4 @@
-import Empty from "./empty.md?raw";
-
+import empty from "./empty/extension.md?raw";
 export default {
-	empty: Empty,
+  empty
 };
