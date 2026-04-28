@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
-  <rect x="196.551" y="223.99" width="600.002" height="299.98" style="transform-box: fill-box; transform-origin: 50% 50%; fill: rgb(24, 139, 153);" transform="matrix(1, 0.000034, -0.000034, 1, -196.547954, -223.979385)"></rect>
-  <rect x="1211.15" y="454.781" width="550" height="250" rx="10" ry="10" style="transform-box: fill-box; transform-origin: 50% 50%; fill: rgb(27, 154, 170);" transform="matrix(1, 0.000066, -0.000066, 1, -1186.150239, -429.781047)"></rect>
-  <g transform="matrix(0.749986, 0, 0, 0.799951, 225.001609, -189.985922)">
-    <rect x="105.724" y="1422.55" width="50" height="250.015" rx="10" ry="10" style="fill: rgb(255, 255, 255); transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(1, 0.000001, -0.000001, 1, -30.47385, -1122.5488)"></rect>
-    <rect x="406.652" y="378.322" width="200" height="50" rx="10" ry="10" style="fill: rgb(255, 255, 255); transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(1, 0.000077, -0.000077, 1, -406.652223, -78.313506)"></rect>
-  </g>
-</svg>
